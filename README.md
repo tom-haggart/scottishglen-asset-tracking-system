@@ -9,4 +9,4 @@ A desktop application project for managing hardware assets, employees, and depar
 - Git and GitHub projects
 
 # project status
-Requirements and development planning
+Prototype in development (Part 2)
