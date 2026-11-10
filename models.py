@@ -3,12 +3,13 @@
 # They contain no database or screen code.
 
 class Employee:
-    """An employee who is responsible for an asset. All 4 details are required"""
-    def __init__(self, first_name, last_name, email, department):
+    """An employee who is responsible for an asset. All 5 details are required"""
+    def __init__(self, first_name, last_name, email, department, employee_id):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.department = department
+        self.employee_id = employee_id
 
 class HardwareDetails:
     """The hardware details of the machine used to log assets.
@@ -31,8 +32,18 @@ class Asset:
         self.notes = notes
         self.purchase_date = purchase_date
 
+class Department:
+    """The department where an employee works.
+    department_name is required."""
+    def __init__(self, department_name):
+        self.department_name = department_name
+
+# Quick maual test of the models, using dummy data.
+# Only runs when this file is run directly, not when it is imported.
 if __name__ == "__main__":
-    e = Employee("Tom", "Haggart", "123.456@gmail.com", "sales")
+    d = Department("Sales")
+    e = Employee("Tom", "Haggart", "123.456@gmail.com", d, 6767)
     h = HardwareDetails("PC-01", "XPS 13", "Dell", "Laptop", "192.168.1.10")
-    a = Asset("A001", h, e)
+    a = Asset(3445, h, e)
     print(a.hardware_details.model, a.employee.first_name, a.notes)
+
