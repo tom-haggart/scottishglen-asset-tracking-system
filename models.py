@@ -34,14 +34,15 @@ class Asset:
 
 class Department:
     """The department where an employee works.
-    department_name is required."""
-    def __init__(self, department_name):
+    department_name and department_id are both required"""
+    def __init__(self, department_name, department_id):
         self.department_name = department_name
+        self.department_id = department_id
 
-# Quick maual test of the models, using dummy data.
+# Quick manthual test of the models, using dummy data.
 # Only runs when this file is run directly, not when it is imported.
 if __name__ == "__main__":
-    d = Department("Sales")
+    d = Department("Sales", 3391)
     e = Employee("Tom", "Haggart", "123.456@gmail.com", d, 6767)
     h = HardwareDetails("PC-01", "XPS 13", "Dell", "Laptop", "192.168.1.10")
     a = Asset(3445, h, e)
