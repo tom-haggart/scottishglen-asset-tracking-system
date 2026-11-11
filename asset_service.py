@@ -5,6 +5,7 @@ import platform
 import socket
 import subprocess
 from models import HardwareDetails
+from datetime import datetime
 
 # The approach used for get_ip_address was suggested by an AI assistant (Claude).
 # This follows the approach in https://docs.python.org/3/library/socket.html.
@@ -54,7 +55,24 @@ def collect_hardware_details():
     ip_address = get_ip_address()
     return HardwareDetails(system_name, model, manufacturer, asset_type, ip_address)
 
-# Quick manual test: only runs when this file is run directly.
+# 255 character limit matches the database (notes in schema.sql)
+def validate_asset(employee_id, purchase_date_text, notes):
+    """Checks the add-asset inputs and returns a list of error messages (empty if all valid)."""
+    errors = []
+    if employee_id is None:
+        errors.append("Choose an employee")
+    if purchase_date_text:
+        try:
+            datetime.strptime(purchase_date_text, "%Y-%m-%d")
+        except ValueError:
+            errors.append("Wrong format used. Correct format: YYYY-MM-DD")
+    if notes and len(notes) > 255:
+            errors.append("Note is too long. Character limit: 255")
+    return errors
+
+# Quick manual test: only runs when this file is run directly. Checks validation.
 if __name__ == "__main__":
     details = collect_hardware_details()
     print(details.system_name, details.asset_type, details.ip_address, details.model, details.manufacturer)
+    print(validate_asset(1, None, None))
+    print(validate_asset(None, "13/45/2026", "x" * 300))
