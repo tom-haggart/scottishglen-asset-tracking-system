@@ -14,3 +14,9 @@ def get_connection():
         f"PWD={config.DB_PASSWORD};"
     )
     return pyodbc.connect(connection_string)
+
+# Quick manual test: connects and counts the departments (should print 5).
+if __name__ == "__main__":
+    with get_connection() as conn:
+        row = conn.cursor().execute("SELECT COUNT(*) FROM department"). fetchone()
+        print("Departments:", row[0])
