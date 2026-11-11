@@ -28,7 +28,20 @@ def get_departments():
             departments.append(Department(row.department_name, row.department_id))
         return departments
 
-# Quick manual test: prints each department's ID and name.
+def add_employee(first_name, last_name, email, department_id):
+    """Adds an employee to the database and returns the new employee_id."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        # Uses ? placeholder values. The values are passed separately, so the database treats them as data not as SQL, which prevents SQL injection.
+        cursor.execute(
+            "INSERT INTO employee (first_name, last_name, email, department_id) OUTPUT INSERTED.employee_id "
+            "VALUES (?, ?, ?, ?)",
+            first_name, last_name, email, department_id)
+        return cursor.fetchone()[0]
+
+# Quick manual test: adds one test employee, then prints each department's ID and name. The test now adds the employee first.
 if __name__ == "__main__":
+    new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
+    print("Added employee with ID", new_id)
     for department in get_departments():
         print(department.department_id, department.department_name)
