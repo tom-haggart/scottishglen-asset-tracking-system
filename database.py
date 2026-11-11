@@ -3,7 +3,7 @@
 import pyodbc
 import config
 
-from models import Department
+from models import Department, Employee
 
 def get_connection():
     """Returns a connection to the hosted SQL Server database."""
@@ -39,9 +39,27 @@ def add_employee(first_name, last_name, email, department_id):
             first_name, last_name, email, department_id)
         return cursor.fetchone()[0]
 
-# Quick manual test: adds one test employee, then prints each department's ID and name. The test now adds the employee first.
+def get_employees():
+    """Returns every employee as a list of Employee objects, each with their Department."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT e.employee_id, e.first_name, e.last_name, e.email, "
+            "d.department_id, d.department_name "
+            "FROM employee e JOIN department d ON e.department_id = d.department_id "
+            "ORDER BY e.last_name, e.first_name")
+        employees = []
+        for row in cursor.fetchall():
+            department = Department(row.department_name, row.department_id)
+            employees.append(Employee(row.first_name, row.last_name, row.email, department, row.employee_id))
+        return employees
+
+# Quick manual test: prints each department and each employee.
 if __name__ == "__main__":
-    new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
-    print("Added employee with ID", new_id)
+    #new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
+    #print("Added employee with ID", new_id)
     for department in get_departments():
         print(department.department_id, department.department_name)
+
+    for employee in get_employees():
+        print(employee.first_name, employee.last_name, employee.department.department_name)
