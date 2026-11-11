@@ -1,5 +1,5 @@
-# MySQL driver: connects the app to the database
-mysql-connector-python
+# SQL Server driver: connects the app to the database
+pyodbc
 
-#Reads database settings from the .env file
+# Reads database settings from the .env file
 python-dotenv
