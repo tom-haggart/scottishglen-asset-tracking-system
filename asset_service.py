@@ -17,7 +17,8 @@ def get_ip_address():
         return ip
     except OSError:
         return "Unknown"
-    
+
+# macOS is for development path only
 def get_model():
     """Returns the model of this machine, or Unknown if it cannot be read."""
     try:
@@ -27,13 +28,21 @@ def get_model():
         return "Unknown"
     except Exception:
         return "Unknown"
+# macOS is for development path only 
+def get_manufacturer():
+    """Returns the manufacturer of this machine, or Unknown if it cannot be read."""
+    try:
+        if platform.system() == "Darwin":
+            return "Apple"
+        return "Unknown"
+    except Exception:
+        return "Unknown"
 
 def collect_hardware_details():
-    """Builds a HardwareDetails object from the machine this is running on.
-    manufacturer has a placeholder."""
+    """Builds a HardwareDetails object from the machine this is running on."""
     system_name = platform.node()
     model = get_model()
-    manufacturer = "Unknown"
+    manufacturer = get_manufacturer()
     asset_type = platform.system()
     ip_address = get_ip_address()
     return HardwareDetails(system_name, model, manufacturer, asset_type, ip_address)
@@ -41,4 +50,4 @@ def collect_hardware_details():
 # Quick manual test: only runs when this file is run directly.
 if __name__ == "__main__":
     details = collect_hardware_details()
-    print(details.system_name, details.asset_type, details.ip_address, details.model)
+    print(details.system_name, details.asset_type, details.ip_address, details.model, details.manufacturer)
