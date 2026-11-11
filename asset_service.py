@@ -3,9 +3,10 @@
 
 import platform
 import socket
+import subprocess
 from models import HardwareDetails
 
-# This approach was suggested by an AI assistant (Claude).
+# The approach used for get_ip_address was suggested by an AI assistant (Claude).
 # This follows the approach in https://docs.python.org/3/library/socket.html.
 def get_ip_address():
     """Returns the ip address of the machine, or Unknown if it cannot be read."""
@@ -16,12 +17,22 @@ def get_ip_address():
         return ip
     except OSError:
         return "Unknown"
+    
+def get_model():
+    """Returns the model of this machine, or Unknown if it cannot be read."""
+    try:
+        if platform.system() == "Darwin":
+            result = subprocess.run(["sysctl", "-n", "hw.model"], capture_output=True, text=True, timeout=5)
+            return result.stdout.strip()
+        return "Unknown"
+    except Exception:
+        return "Unknown"
 
 def collect_hardware_details():
     """Builds a HardwareDetails object from the machine this is running on.
-    model and manufacturer have placeholders."""
+    manufacturer has a placeholder."""
     system_name = platform.node()
-    model = "Unknown"
+    model = get_model()
     manufacturer = "Unknown"
     asset_type = platform.system()
     ip_address = get_ip_address()
@@ -30,4 +41,4 @@ def collect_hardware_details():
 # Quick manual test: only runs when this file is run directly.
 if __name__ == "__main__":
     details = collect_hardware_details()
-    print(details.system_name, details.asset_type, details.ip_address)
+    print(details.system_name, details.asset_type, details.ip_address, details.model)
