@@ -18,16 +18,19 @@ def get_ip_address():
     except OSError:
         return "Unknown"
 
-# macOS is for development path only
 def get_model():
     """Returns the model of this machine, or Unknown if it cannot be read."""
     try:
         if platform.system() == "Darwin":
             result = subprocess.run(["sysctl", "-n", "hw.model"], capture_output=True, text=True, timeout=5)
-            return result.stdout.strip()
+            return result.stdout.strip() or "Unknown"
+        if platform.system() == "Windows":
+            result = subprocess.run(["powershell", "-NoProfile", "-Command", "(Get-CimInstance Win32_ComputerSystem).Model"], capture_output=True, text=True, timeout=15)
+            return result.stdout.strip() or "Unknown"
         return "Unknown"
     except Exception:
         return "Unknown"
+
 # macOS is for development path only 
 def get_manufacturer():
     """Returns the manufacturer of this machine, or Unknown if it cannot be read."""
