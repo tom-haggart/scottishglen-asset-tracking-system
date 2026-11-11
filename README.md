@@ -5,8 +5,8 @@ A desktop application project for managing hardware assets, employees, and depar
 #  planned tools
 - Python
 - Visual Studio Code
-- MySQL
+- SQL Server
 - Git and GitHub projects
 
 # project status
-Prototype in development (Part 2)
+Prototype in development
