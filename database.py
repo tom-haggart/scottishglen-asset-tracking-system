@@ -54,6 +54,22 @@ def get_employees():
             employees.append(Employee(row.first_name, row.last_name, row.email, department, row.employee_id))
         return employees
 
+# purchase_date and notes may be None. This will be fixed during validation. 
+def add_asset(hardware, employee_id, purchase_date, notes):
+    """Saves an asset and its hardware details in one transaction and returns the new asset_id."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO hardware_details (system_name, model, manufacturer, asset_type, ip_address) OUTPUT INSERTED.hardware_id "
+            "VALUES (?, ?, ?, ?, ?)",
+            hardware.system_name, hardware.model, hardware.manufacturer, hardware.asset_type, hardware.ip_address)
+        hardware_id = cursor.fetchone()[0]
+        cursor.execute(
+            "INSERT INTO asset (hardware_id, employee_id, notes, purchase_date) OUTPUT INSERTED.asset_id "
+            "VALUES (?, ?, ?, ?)",
+            hardware_id, employee_id, notes, purchase_date)
+        return cursor.fetchone()[0]
+
 # Quick manual test: prints each department and each employee.
 if __name__ == "__main__":
     #new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
