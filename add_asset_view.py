@@ -1,14 +1,14 @@
 # add_asset_view.py
 # The add-asset form
 import tkinter as tk
-from asset_service import collect_hardware_details
-from tkinter import ttk
-from database import get_employees
+from asset_service import collect_hardware_details, validate_asset
+from tkinter import ttk, messagebox
+from database import get_employees, add_asset
 
 def build_form():
     """Builds and returns the add-asset window.
     The window contains: Hardware details shown automatically,
-    plus the employee dropdown, purchase date box and notes box."""
+    plus the employee dropdown, purchase date box, notes box and save button."""
     window = tk.Tk()
     window.title("Add Asset")
     hardware = collect_hardware_details()
@@ -41,5 +41,25 @@ def build_form():
     tk.Label(window, text="Notes (optional, max 255 characters)").pack(pady=(10, 0))
     notes_entry = tk.Entry(window, width=40)
     notes_entry.pack()
+
+    def save_asset():
+        """Reads the form, validates it, and saves the asset."""
+        # The dropdown only gives back the shown text, so look up the id.
+        employee_id = employee_lookup.get(employee_box.get())
+        date_text = date_entry.get().strip()
+        notes_text = notes_entry.get().strip()
+
+        errors = validate_asset(employee_id, date_text, notes_text)
+        if errors:
+            messagebox.showerror("Cannot save", "\n".join(errors))
+            return
+
+        # Blank boxes must go to the database as None, not ""
+        purchase_date = date_text or None
+        notes = notes_text or None
+        asset_id = add_asset(hardware, employee_id, purchase_date, notes)
+        messagebox.showinfo("Saved", f"Asset saved with ID {asset_id}")
+
+    tk.Button(window, text="Save", command=save_asset).pack(pady=15)
 
     return window
