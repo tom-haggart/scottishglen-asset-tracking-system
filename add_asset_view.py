@@ -1,6 +1,7 @@
 # add_asset_view.py
 # The add-asset form
 import tkinter as tk
+import sv_ttk
 from asset_service import collect_hardware_details, validate_asset
 from tkinter import ttk, messagebox
 from database import get_employees, add_asset
@@ -61,5 +62,9 @@ def build_form():
         messagebox.showinfo("Saved", f"Asset saved with ID {asset_id}")
 
     tk.Button(window, text="Save", command=save_asset).pack(pady=15)
+
+    # Applies sv-ttk theme (Modern Windows 11 theme) to the window.
+    # Only restyles ttk widgets.
+    sv_ttk.set_theme("light")
 
     return window
