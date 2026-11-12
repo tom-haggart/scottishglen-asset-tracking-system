@@ -35,12 +35,12 @@ def build_form():
 
     # The date input.
     ttk.Label(window, text="Purchase date (YYYY-MM-DD, optional)").pack(pady=(10, 0))
-    date_entry = tk.Entry(window)
+    date_entry = ttk.Entry(window)
     date_entry.pack()
 
     # The notes input.
     ttk.Label(window, text="Notes (optional, max 255 characters)").pack(pady=(10, 0))
-    notes_entry = tk.Entry(window, width=40)
+    notes_entry = ttk.Entry(window, width=40)
     notes_entry.pack()
 
     def save_asset():
@@ -61,7 +61,7 @@ def build_form():
         asset_id = add_asset(hardware, employee_id, purchase_date, notes)
         messagebox.showinfo("Saved", f"Asset saved with ID {asset_id}")
 
-    tk.Button(window, text="Save", command=save_asset).pack(pady=15)
+    ttk.Button(window, text="Save", command=save_asset).pack(pady=15)
 
     # Applies sv-ttk theme (Modern Windows 11 theme) to the window.
     # Only restyles ttk widgets.
