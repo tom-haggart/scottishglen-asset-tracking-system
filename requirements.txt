@@ -3,3 +3,6 @@ pyodbc
 
 # Reads database settings from the .env file
 python-dotenv
+
+# Modern Windows 11 style theme for the tkinter form.
+sv-ttk
