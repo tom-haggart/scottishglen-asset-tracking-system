@@ -59,6 +59,32 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
         if asset.notes is not None:
             notes_entry.insert(0, asset.notes)
 
+    def save():
+        """Validates the inputs, then adds a new asset or updates the one being edited."""
+        employee_id = employee_lookup.get(employee_box.get())
+        date_text = date_entry.get().strip()
+        notes_text = notes_entry.get().strip()
+
+        errors = validate_asset(employee_id, date_text, notes_text)
+        # Stays open on errors, so the user keeps what they typed.
+        if errors:
+            messagebox.showerror("Cannot save", "\n".join(errors))
+            return
+
+        # Blank boxes must go to the database as None not "".
+        purchase_date = date_text or None
+        notes = notes_text or None
+        if asset is None:
+            add_asset(hardware, employee_id, purchase_date, notes)
+        else:
+            update_asset(asset.asset_id, employee_id, purchase_date, notes)
+
+        if on_saved is not None:
+            on_saved()
+        dialog.destroy()
+
+    ttk.Button(dialog, text="Save", command=save).grid(row=8, column=1, sticky="e", padx=10, pady=10)
+
 # Quick manual test: opens the dialog in Add mode and in Edit mode with the first stored asset.
 if __name__ == "__main__":
     from database import get_assets
