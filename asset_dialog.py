@@ -51,6 +51,14 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
 
     ttk.Button(dialog, text="Cancel", command=dialog.destroy).grid(row=8, column=0, padx=10, pady=10)
 
+    # Edit mode: start with the asset's current employee, date and notes.
+    if asset is not None:
+        employee_box.set(f"{asset.employee.first_name} {asset.employee.last_name} ({asset.employee.department.department_name})")
+        if asset.purchase_date is not None:
+            date_entry.insert(0, str(asset.purchase_date))
+        if asset.notes is not None:
+            notes_entry.insert(0, asset.notes)
+
 # Quick manual test: opens the dialog in Add mode and in Edit mode with the first stored asset.
 if __name__ == "__main__":
     from database import get_assets
