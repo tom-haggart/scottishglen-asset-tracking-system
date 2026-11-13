@@ -65,6 +65,18 @@ def update_employee(employee_id, first_name, last_name, email, department_id):
             "WHERE employee_id = ?",
             first_name, last_name, email, department_id, employee_id)
 
+# Deletes an employee, but only if they own no assets.
+def delete_employee(employee_id):
+    """Deletes one employee, returns True if it existed, False if not and 
+    raises ValueError if the employee still owns assets."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM asset WHERE employee_id = ?", employee_id)
+        if cursor.fetchone()[0] > 0:
+            raise ValueError("This employee still owns assets. Reassign or delete them first.")
+        cursor.execute("DELETE FROM employee WHERE employee_id = ?", employee_id)
+        return cursor.rowcount > 0
+
 # purchase_date and notes may be None. This will be fixed during validation. 
 def add_asset(hardware, employee_id, purchase_date, notes):
     """Saves an asset and its hardware details in one transaction and returns the new asset_id."""
@@ -130,7 +142,7 @@ def delete_asset(asset_id):
         cursor.execute("DELETE FROM hardware_details WHERE hardware_id = ?", hardware_id)
         return True
 
-# Quick manual test: prints each department, employee and asset.
+# Quick manual test: prints each department, employee and asset. Deletes test employee.
 if __name__ == "__main__":
     for department in get_departments():
         print(department.department_id, department.department_name)
@@ -141,6 +153,13 @@ if __name__ == "__main__":
     for asset in get_assets():
         print(asset.asset_id, asset.hardware_details.system_name, asset.employee.last_name, asset.purchase_date, asset.notes)
 
-    update_employee(1, "Test", "Employee", "test.employee@example.com", 4)
-    print(get_employees()[0].department.department_name)
-    update_employee(1, "Test", "Employee", "test.employee@example.com", 1)
+    new_id = add_employee("Delete", "Me", "delete.me@example.com", 1)
+    print(delete_employee(new_id))
+    try:
+        delete_employee(1)
+    except ValueError as error:
+        print(error)
+
+    #update_employee(1, "Test", "Employee", "test.employee@example.com", 4)
+    #print(get_employees()[0].department.department_name)
+    #update_employee(1, "Test", "Employee", "test.employee@example.com", 1)
