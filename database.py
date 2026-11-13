@@ -142,7 +142,7 @@ def delete_asset(asset_id):
         cursor.execute("DELETE FROM hardware_details WHERE hardware_id = ?", hardware_id)
         return True
 
-# Quick manual test: prints each department, employee and asset. Deletes test employee.
+# Quick manual test: prints each department, employee and asset.
 if __name__ == "__main__":
     for department in get_departments():
         print(department.department_id, department.department_name)
@@ -152,14 +152,3 @@ if __name__ == "__main__":
 
     for asset in get_assets():
         print(asset.asset_id, asset.hardware_details.system_name, asset.employee.last_name, asset.purchase_date, asset.notes)
-
-    new_id = add_employee("Delete", "Me", "delete.me@example.com", 1)
-    print(delete_employee(new_id))
-    try:
-        delete_employee(1)
-    except ValueError as error:
-        print(error)
-
-    #update_employee(1, "Test", "Employee", "test.employee@example.com", 4)
-    #print(get_employees()[0].department.department_name)
-    #update_employee(1, "Test", "Employee", "test.employee@example.com", 1)
