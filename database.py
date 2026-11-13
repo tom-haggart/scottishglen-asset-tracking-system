@@ -54,6 +54,17 @@ def get_employees():
             employees.append(Employee(row.first_name, row.last_name, row.email, department, row.employee_id))
         return employees
 
+# Saves changes to an existing employee.
+def update_employee(employee_id, first_name, last_name, email, department_id):
+    """Updates the name, email and department of one employee."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE employee SET first_name = ?, last_name = ?, email = ?, department_id = ? "
+            # WHERE limits the change to one employee.
+            "WHERE employee_id = ?",
+            first_name, last_name, email, department_id, employee_id)
+
 # purchase_date and notes may be None. This will be fixed during validation. 
 def add_asset(hardware, employee_id, purchase_date, notes):
     """Saves an asset and its hardware details in one transaction and returns the new asset_id."""
@@ -129,3 +140,7 @@ if __name__ == "__main__":
 
     for asset in get_assets():
         print(asset.asset_id, asset.hardware_details.system_name, asset.employee.last_name, asset.purchase_date, asset.notes)
+
+    update_employee(1, "Test", "Employee", "test.employee@example.com", 4)
+    print(get_employees()[0].department.department_name)
+    update_employee(1, "Test", "Employee", "test.employee@example.com", 1)
