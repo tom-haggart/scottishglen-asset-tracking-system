@@ -119,19 +119,8 @@ def delete_asset(asset_id):
         cursor.execute("DELETE FROM hardware_details WHERE hardware_id = ?", hardware_id)
         return True
 
-# Quick manual test: prints each department, employee and asset. Deletes test asset.
+# Quick manual test: prints each department, employee and asset.
 if __name__ == "__main__":
-
-    test_hardware = HardwareDetails("DELETE-TEST", "n/a", "n/a", "Windows", "0.0.0.0")
-    new_id = add_asset(test_hardware, 1, None, "to be deleted")
-    print(delete_asset(new_id))
-    print(len(get_assets()))
-
-    # update_asset(2, 1, "2026-11-13", "edited by test")
-    #print(get_assets()[1].notes)
-
-    #new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
-    #print("Added employee with ID", new_id)
     for department in get_departments():
         print(department.department_id, department.department_name)
 
