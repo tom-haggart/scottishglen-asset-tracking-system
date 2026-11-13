@@ -22,15 +22,19 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
     ttk.Label(dialog, text="First name").grid(row=0, column=0, sticky="w", padx=10, pady=5)
     first_name_entry = ttk.Entry(dialog, width=30)
     first_name_entry.grid(row=0, column=1, padx=10, pady=5)
+
     ttk.Label(dialog, text="Last name").grid(row=1, column=0, sticky="w", padx=10, pady=5)
     last_name_entry = ttk.Entry(dialog, width=30)
     last_name_entry.grid(row=1, column=1, padx=10, pady=5)
+
     ttk.Label(dialog, text="Email").grid(row=2, column=0, sticky="w", padx=10, pady=5)
     email_entry = ttk.Entry(dialog, width=30)
     email_entry.grid(row=2, column=1, padx=10, pady=5)
+
     ttk.Label(dialog, text="Department").grid(row=3, column=0, sticky="w", padx=10, pady=5)
     department_box = ttk.Combobox(dialog, values=list(department_lookup.keys()), state="readonly", width=27)
     department_box.grid(row=3, column=1, padx=10, pady=5)
+
     ttk.Button(dialog, text="Cancel", command=dialog.destroy).grid(row=4, column=0, padx=10, pady=10)
 
     # Edit mode: start with employee's current details.
@@ -39,6 +43,32 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
         last_name_entry.insert(0, employee.last_name)
         email_entry.insert(0, employee.email)
         department_box.set(employee.department.department_name)
+    
+    # Lets the caller refresh its table.
+    def save():
+        """Validates the inputs, then adds a new employee or updates the one being edited."""
+        first_name = first_name_entry.get().strip()
+        last_name = last_name_entry.get().strip()
+        email = email_entry.get().strip()
+        department_id = department_lookup.get(department_box.get())
+
+        errors = validate_employee(first_name, last_name, email, department_id)
+        # Stays open on errors, so the user keeps what they typed.
+        if errors:
+            messagebox.showerror("Cannot save", "\n".join(errors))
+            return
+
+        # No employee given means Add mode, otherwise update the one being edited.
+        if employee is None:
+            add_employee(first_name, last_name, email, department_id)
+        else:
+            update_employee(employee.employee_id, first_name, last_name, email, department_id)
+
+        if on_saved is not None:
+            on_saved()
+        dialog.destroy()
+
+    ttk.Button(dialog, text="Save", command=save).grid(row=4, column=1, sticky="e", padx=10, pady=10)
 
 # Quick manual test: opens the dialog from a small test window.
 if __name__ == "__main__":
