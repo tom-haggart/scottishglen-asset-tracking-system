@@ -33,8 +33,19 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
     department_box.grid(row=3, column=1, padx=10, pady=5)
     ttk.Button(dialog, text="Cancel", command=dialog.destroy).grid(row=4, column=0, padx=10, pady=10)
 
+    # Edit mode: start with employee's current details.
+    if employee is not None:
+        first_name_entry.insert(0, employee.first_name)
+        last_name_entry.insert(0, employee.last_name)
+        email_entry.insert(0, employee.email)
+        department_box.set(employee.department.department_name)
+
 # Quick manual test: opens the dialog from a small test window.
 if __name__ == "__main__":
     root = tk.Tk()
     ttk.Button(root, text="Add employee", command=lambda: open_employee_dialog(root)).pack(padx=40, pady=40)
+
+    from models import Employee, Department
+    sample = Employee("John", "Stewart", "john@example.com", Department("Finance", 5), 99)
+    ttk.Button(root, text="Edit sample employee", command=lambda: open_employee_dialog(root, sample)).pack(padx=40, pady=(0, 40))
     root.mainloop()
