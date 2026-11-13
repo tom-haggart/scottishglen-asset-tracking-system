@@ -1,5 +1,6 @@
 # asset_service.py
 # Collects hardware details from the machine being used.
+# Validates asset and employee.
 
 import platform
 import socket
@@ -70,9 +71,36 @@ def validate_asset(employee_id, purchase_date_text, notes):
             errors.append("Note is too long. Character limit: 255")
     return errors
 
+# Limits match the database (schema.sql)
+def validate_employee(first_name, last_name, email, department_id):
+    """Checks the add-employee inputs and returns a list of error messages (empty if all valid)."""
+    errors = []
+    first_name = first_name.strip()
+    if not first_name:
+        errors.append("Enter a first name")
+    elif len(first_name) > 50:
+        errors.append("First name is too long. Character limit: 50")
+    last_name = last_name.strip()
+    if not last_name:
+        errors.append("Enter a last name")
+    elif len(last_name) > 50:
+        errors.append("Last name is too long. Character limit: 50")
+    email = email.strip()
+    if not email:
+        errors.append("Enter an email")
+    elif "@" not in email or "." not in email:
+        errors.append("Email address is not valid")
+    elif len(email) > 100:
+        errors.append("Email is too long. Character limit: 100")
+    if department_id is None:
+        errors.append("Choose a department")
+    return errors
+    
 # Quick manual test: only runs when this file is run directly. Checks validation.
 if __name__ == "__main__":
     details = collect_hardware_details()
     print(details.system_name, details.asset_type, details.ip_address, details.model, details.manufacturer)
     print(validate_asset(1, None, None))
     print(validate_asset(None, "13/45/2026", "x" * 300))
+    print(validate_employee("John", "Stewart", "John@example.com", 1))
+    print(validate_employee("", "", "bad", None))
