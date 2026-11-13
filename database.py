@@ -104,9 +104,30 @@ def update_asset(asset_id, employee_id, purchase_date, notes):
             "WHERE asset_id = ?",
             employee_id, purchase_date, notes, asset_id)
 
-# Quick manual test: prints each department, employee and asset. Also edits asset 2 as a test.
+# Deletes an asset and its hardware details together.
+def delete_asset(asset_id):
+    """Deletes one asset and its hardware details. Returns True if it existed, False if not."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        # Find the hardware row first: it must be deleted after the asset.
+        cursor.execute("SELECT hardware_id FROM asset WHERE asset_id = ?", asset_id)
+        row = cursor.fetchone()
+        if row is None:
+            return False
+        hardware_id = row[0]
+        cursor.execute("DELETE FROM asset WHERE asset_id = ?", asset_id)
+        cursor.execute("DELETE FROM hardware_details WHERE hardware_id = ?", hardware_id)
+        return True
+
+# Quick manual test: prints each department, employee and asset. Deletes test asset.
 if __name__ == "__main__":
-   # update_asset(2, 1, "2026-11-13", "edited by test")
+
+    test_hardware = HardwareDetails("DELETE-TEST", "n/a", "n/a", "Windows", "0.0.0.0")
+    new_id = add_asset(test_hardware, 1, None, "to be deleted")
+    print(delete_asset(new_id))
+    print(len(get_assets()))
+
+    # update_asset(2, 1, "2026-11-13", "edited by test")
     #print(get_assets()[1].notes)
 
     #new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
