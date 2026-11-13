@@ -106,8 +106,8 @@ def update_asset(asset_id, employee_id, purchase_date, notes):
 
 # Quick manual test: prints each department, employee and asset. Also edits asset 2 as a test.
 if __name__ == "__main__":
-    update_asset(2, 1, "2026-11-13", "edited by test")
-    print(get_assets()[1].notes)
+   # update_asset(2, 1, "2026-11-13", "edited by test")
+    #print(get_assets()[1].notes)
 
     #new_id = add_employee("Test", "Employee", "test.employee@example.com", 1)
     #print("Added employee with ID", new_id)
