@@ -12,7 +12,7 @@ def open_main_window():
     root.title("ScottishGlen Asset Tracking System")
     sv_ttk.set_theme("light")
     root.geometry("1100x500")
-    root.minimize(800, 400)
+    root.minsize(800, 400)
 
     notebook = ttk.Notebook(root)
     notebook.pack(fill="both", expand=True)
