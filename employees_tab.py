@@ -29,6 +29,41 @@ def build_employees_tab(parent):
             row_id = table.insert("", "end", values=(employee.first_name, employee.last_name, employee.email, employee.department.department_name))
             employees_by_row[row_id] = employee
 
+    def selected_employee():
+        """Returns the Employee for the selected row, or None (with a message) if nothing is selected."""
+        selection = table.selection()
+        if not selection:
+            messagebox.showinfo("Select an employee", "Click a row in the table first")
+            return None
+        return employees_by_row[selection[0]]
+    
+    def add():
+        open_employee_dialog(tab.winfo_toplevel(), on_saved=refresh)
+
+    def edit():
+        employee = selected_employee()
+        if employee is not None:
+            open_employee_dialog(tab.winfo_toplevel(), employee, on_saved=refresh)
+
+    def delete():
+        employee = selected_employee()
+        if employee is None:
+            return
+        if not messagebox.askyesno("Delete employee", f"Delete {employee.first_name} {employee.last_name}?"):
+            return
+        try:
+            delete_employee(employee.employee_id)
+        except ValueError as error:
+            messagebox.showerror("Cannot delete", str(error))
+            return
+        refresh()
+
+    buttons = ttk.Frame(tab)
+    buttons.pack(pady=(0, 10))
+    ttk.Button(buttons, text="Add", command=add).pack(side="left", padx=5)
+    ttk.Button(buttons, text="Edit", command=edit).pack(side="left", padx=5)
+    ttk.Button(buttons, text="Delete", command=delete).pack(side="left", padx=5)
+
     refresh()
     return tab
 
