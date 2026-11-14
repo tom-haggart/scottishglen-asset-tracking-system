@@ -1,6 +1,5 @@
 # main.py
-# Starts the add-asset form.
-from add_asset_view import build_form
+# Starts the ScottishGlen Asset Tracking System.
+from main_window import open_main_window
 
-if __name__ == "__main__":
-    build_form().mainloop()
+open_main_window()
