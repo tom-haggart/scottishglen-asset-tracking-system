@@ -94,11 +94,12 @@ def add_asset(hardware, employee_id, purchase_date, notes):
         return cursor.fetchone()[0]
 
 # Reads every asset with its hardware and employee. Fills the Assets tab and later feeds edit and delete.
-def get_assets():
-    """Returns every asset as a list of Asset objects, each with its HardwareDetails and Employee."""
+def get_assets(limit=None, offset=0):
+    """Returns assets as Asset objects, each with its HardwareDetails and Employee.
+    With a limit, returns only one page of that many rows, starting after offset rows."""
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute(
+        sql = (
             "SELECT a.asset_id, a.purchase_date, a.notes, "
             "h.system_name, h.model, h.manufacturer, h.asset_type, h.ip_address, "
             "e.employee_id, e.first_name, e.last_name, e.email, "
@@ -108,6 +109,11 @@ def get_assets():
             "JOIN employee e ON a.employee_id = e.employee_id "
             "JOIN department d ON e.department_id = d.department_id "
             "ORDER BY a.asset_id")
+        parameters = []
+        if limit is not None:
+            sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+            parameters = [offset, limit]
+        cursor.execute(sql, *parameters)
         assets = []
         for row in cursor.fetchall():
             hardware = HardwareDetails(row.system_name, row.model, row.manufacturer, row.asset_type, row.ip_address)
@@ -115,6 +121,13 @@ def get_assets():
             employee = Employee(row.first_name, row.last_name, row.email, department, row.employee_id)
             assets.append(Asset(row.asset_id, hardware, employee, row.purchase_date, row.notes))
         return assets
+    
+def count_assets():
+    """Returns how many assets there are, used to work out the number of pages."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM asset")
+        return cursor.fetchone()[0]
 
 # Saves changes to an existing asset. Hardware details are not editable.
 def update_asset(asset_id, employee_id, purchase_date, notes):
