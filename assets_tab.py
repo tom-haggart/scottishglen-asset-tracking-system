@@ -1,11 +1,13 @@
 # assets_tab.py
 # The Assets tab: a table of assets with Add, Edit and Delete buttons.
 
+import math
 import tkinter as tk
 from tkinter import ttk, messagebox
-from database import get_assets, delete_asset
+from database import get_assets, delete_asset, count_assets
 from asset_dialog import open_asset_dialog
 
+PAGE_SIZE = 50
 def build_assets_tab(parent):
     """Builds the Assets tab inside parent and returns it."""
     tab = ttk.Frame(parent)
@@ -25,12 +27,18 @@ def build_assets_tab(parent):
 
     # Remembers which Asset each table row shows, so Edit and Delete know which is selected.
     assets_by_row = {}
+    current_page = {"number": 0}
 
     def refresh():
         """Reloads the table from the database."""
         table.delete(*table.get_children())
         assets_by_row.clear()
-        for asset in get_assets():
+        total = count_assets()
+        page_count = max(1, math.ceil(total / PAGE_SIZE))
+        # After a delete the last page may no longer exist, dont go past it.
+        current_page["number"] = min(current_page["number"], page_count - 1)
+        offset = current_page["number"] * PAGE_SIZE
+        for asset in get_assets(limit=PAGE_SIZE, offset=offset):
             employee_name = f"{asset.employee.first_name} {asset.employee.last_name}"
             row_id = table.insert("", "end", values=(
                 asset.asset_id,
