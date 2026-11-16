@@ -3,6 +3,21 @@
 import time
 from database import get_assets
 from database import count_assets
+from database import add_asset, update_asset, delete_asset
+from models import HardwareDetails
+
+def time_it(label, function, *arguments):
+    """Runs function once with the given arguments and prints how long it took."""
+    start = time.perf_counter()
+    result = function(*arguments)
+    print(f"{label}: {time.perf_counter() - start:.2f} s")
+    return result
+
+# Marked SEED, so cleanup_test_data.sql would remove it if the script stopped half way.
+hardware = HardwareDetails("SEED-TIMING", "Test model", "Test maker", "Windows", "10.0.0.1")
+new_id = time_it("Add asset", add_asset, hardware, 1, None, "SEED")
+time_it("Edit asset", update_asset, new_id, 1, "2025-02-02", "SEED")
+time_it("Delete asset", delete_asset, new_id)
 
 start = time.perf_counter()
 assets = get_assets()
