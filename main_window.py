@@ -7,12 +7,21 @@ from assets_tab import build_assets_tab
 from employees_tab import build_employees_tab
 import pyodbc
 from tkinter import messagebox
+import sys
 
 DATABASE_MESSAGE = "Cannot reach the database. Check your network connection or the university firewall, then start the program again."
+
+def show_error(error_type, error_value, error_traceback):
+    """Called by tkinter when a button click raises an error. Database errors get a friendly message."""
+    if issubclass(error_type, pyodbc.Error):
+        messagebox.showerror("Database unavailable", "Cannot reach the database. Check your network connection or the university firewall, then try again.")
+    else:
+        sys.__excepthook__(error_type, error_value, error_traceback)
 
 def open_main_window():
     """Builds and shows the main window."""
     root = tk.Tk()
+    root.report_callback_exception = show_error
     root.title("ScottishGlen Asset Tracking System")
     sv_ttk.set_theme("light")
     root.geometry("1100x500")
