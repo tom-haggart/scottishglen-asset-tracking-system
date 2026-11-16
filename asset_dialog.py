@@ -8,13 +8,15 @@ from database import get_employees, add_asset, update_asset
 def open_asset_dialog(parent, asset=None, on_saved=None):
     """Opens a window to add an asset (recording this computer), or to edit one if an Asset is given.
     on_saved is called after a successful save, so the caller can refresh its table."""
+    # Add mode records this computer. Edit mode shows the stored details, which are read-only.
+    hardware = asset.hardware_details if asset else collect_hardware_details()
+    # Fetch what can fail (hardware, employees) before opening the window, so a database error leaves no half-built dialog.
+    employees = get_employees()
+    
     dialog = tk.Toplevel(parent)
     dialog.title("Edit Asset" if asset else "Add Asset")
     dialog.transient(parent)
     dialog.grab_set()
-
-    # Add mode records this computer. Edit mode shows the stored details, which are read-only.
-    hardware = asset.hardware_details if asset else collect_hardware_details()
 
     details = [
         ("System name", hardware.system_name),
@@ -27,8 +29,6 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
         ttk.Label(dialog, text=name).grid(row=row, column=0, sticky="w", padx=10, pady=2)
         ttk.Label(dialog, text=value).grid(row=row, column=1, sticky="w", padx=10, pady=2)
 
-    # The employee dropdown.
-    employees = get_employees()
     # A dictionary mapping the text shown in the dropdown to the employee's id
     employee_lookup = {}
     for employee in employees:

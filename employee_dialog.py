@@ -8,16 +8,16 @@ from asset_service import validate_employee
 def open_employee_dialog(parent, employee=None, on_saved=None):
     """Opens a window to add an employee, or to edit one if an Employee is given.
     on_saved is called after a successful save, so the caller can refresh its table."""
+    # Maps the department name shown in the dropdown to its id, like the employee lookup on the asset form.
+    department_lookup = {}
+    for department in get_departments():
+        department_lookup[department.department_name] = department.department_id
+    
     dialog = tk.Toplevel(parent)
     dialog.title("Edit Employee" if employee else "Add Employee")
     # Keeps the dialog on top of the main window and blocks it until this one is closed.
     dialog.transient(parent)
     dialog.grab_set()
-
-    # Maps the department name shown in the dropdown to its id, like the employee lookup on the asset form.
-    department_lookup = {}
-    for department in get_departments():
-        department_lookup[department.department_name] = department.department_id
 
     ttk.Label(dialog, text="First name").grid(row=0, column=0, sticky="w", padx=10, pady=5)
     first_name_entry = ttk.Entry(dialog, width=30)
