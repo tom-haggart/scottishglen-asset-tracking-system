@@ -8,6 +8,7 @@ from database import get_assets, delete_asset, count_assets
 from asset_dialog import open_asset_dialog
 
 PAGE_SIZE = 50
+
 def build_assets_tab(parent):
     """Builds the Assets tab inside parent and returns it."""
     tab = ttk.Frame(parent)
@@ -51,6 +52,18 @@ def build_assets_tab(parent):
                 asset.notes or ""))
             assets_by_row[row_id] = asset
 
+        page_label.config(text=f"Page {current_page['number'] + 1} of {page_count} ({total} assets)")
+        previous_button.config(state="normal" if current_page["number"] > 0 else "disabled")
+        next_button.config(state="normal" if current_page["number"] < page_count - 1 else "disabled")
+
+    def go_previous():
+        current_page["number"] -= 1
+        refresh()
+    
+    def go_next():
+        current_page["number"] += 1
+        refresh()
+
     def selected_asset():
         """Returns the Asset for the selected row, or None (with a message) if nothing is selected."""
         selection = table.selection()
@@ -75,6 +88,15 @@ def build_assets_tab(parent):
             return
         delete_asset(asset.asset_id)
         refresh()
+
+    navigation = ttk.Frame(tab)
+    navigation.pack()
+    previous_button = ttk.Button(navigation, text="Previous", command=go_previous)
+    previous_button.pack(side="left", padx=5)
+    page_label = ttk.Label(navigation, text="")
+    page_label.pack(side="left", padx=10)
+    next_button = ttk.Button(navigation, text="Next", command=go_next)
+    next_button.pack(side="left", padx=5)
 
     buttons = ttk.Frame(tab)
     buttons.pack(pady=(0, 10))
