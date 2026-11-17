@@ -44,7 +44,6 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
         email_entry.insert(0, employee.email)
         department_box.set(employee.department.department_name)
     
-    # Lets the caller refresh its table.
     def save():
         """Validates the inputs, then adds a new employee or updates the one being edited."""
         first_name = first_name_entry.get().strip()

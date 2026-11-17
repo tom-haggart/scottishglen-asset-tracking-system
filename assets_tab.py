@@ -43,7 +43,7 @@ def build_assets_tab(parent):
         assets_by_row.clear()
         total = count_assets()
         page_count = max(1, math.ceil(total / PAGE_SIZE))
-        # After a delete the last page may no longer exist, dont go past it.
+        # After a delete the last page may no longer exist, don't go past it.
         current_page["number"] = min(current_page["number"], page_count - 1)
         offset = current_page["number"] * PAGE_SIZE
         for asset in get_assets(limit=PAGE_SIZE, offset=offset):

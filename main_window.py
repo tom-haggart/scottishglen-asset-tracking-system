@@ -1,5 +1,5 @@
 # main_window.py
-# The main window: one window with an Assets tab and an Employee tab.
+# The main window: one window with an Assets tab and an Employees tab.
 import tkinter as tk
 from tkinter import ttk
 import sv_ttk

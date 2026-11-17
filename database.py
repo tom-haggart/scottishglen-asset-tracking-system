@@ -77,7 +77,7 @@ def delete_employee(employee_id):
         cursor.execute("DELETE FROM employee WHERE employee_id = ?", employee_id)
         return cursor.rowcount > 0
 
-# purchase_date and notes may be None. This will be fixed during validation. 
+# purchase_date and notes are optional and arrive as None when left blank.
 def add_asset(hardware, employee_id, purchase_date, notes):
     """Saves an asset and its hardware details in one transaction and returns the new asset_id."""
     with get_connection() as conn:
@@ -93,7 +93,7 @@ def add_asset(hardware, employee_id, purchase_date, notes):
             hardware_id, employee_id, notes, purchase_date)
         return cursor.fetchone()[0]
 
-# Reads every asset with its hardware and employee. Fills the Assets tab and later feeds edit and delete.
+# Reads every asset with their hardware and employee, a page at a time. Fills the Assets tab and feeds Edit and Delete.
 def get_assets(limit=None, offset=0):
     """Returns assets as Asset objects, each with its HardwareDetails and Employee.
     With a limit, returns only one page of that many rows, starting after offset rows."""

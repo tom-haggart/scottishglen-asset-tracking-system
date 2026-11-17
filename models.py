@@ -39,7 +39,7 @@ class Department:
         self.department_name = department_name
         self.department_id = department_id
 
-# Quick manthual test of the models, using dummy data.
+# Quick manual test of the models, using dummy data.
 # Only runs when this file is run directly, not when it is imported.
 if __name__ == "__main__":
     d = Department("Sales", 3391)
