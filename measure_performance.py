@@ -1,9 +1,7 @@
 # measure_performance.py
 # TEST TOOLING for NFR 3 and 4 (#10) and the unique-ID check (#9). Run with the seeded data in place.
 import time
-from database import get_assets
-from database import count_assets
-from database import add_asset, update_asset, delete_asset
+from database import add_asset, count_assets, delete_asset, get_assets, update_asset
 from models import HardwareDetails
 
 def time_it(label, function, *arguments):

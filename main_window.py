@@ -1,13 +1,14 @@
 # main_window.py
 # The main window: one window with an Assets tab and an Employees tab.
+import sys
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+
+import pyodbc
 import sv_ttk
+
 from assets_tab import build_assets_tab
 from employees_tab import build_employees_tab
-import pyodbc
-from tkinter import messagebox
-import sys
 
 DATABASE_MESSAGE = "Cannot reach the database. Check your network connection or the university firewall, then start the program again."
 
@@ -39,6 +40,3 @@ def open_main_window():
         return
 
     root.mainloop()
-
-if __name__ == "__main__":
-    open_main_window()
