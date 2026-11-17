@@ -24,6 +24,13 @@ def build_assets_tab(parent):
     table.heading("purchase_date", text="Purchase date")
     table.heading("notes", text="Notes")
     table.column("asset_id", width=50, anchor="center", stretch=False)
+    table.column("system_name", width=130)
+    table.column("model", width=220)
+    table.column("asset_type", width=70)
+    table.column("ip_address", width=110)
+    table.column("employee", width=140)
+    table.column("purchase_date", width=110)
+    table.column("notes", width=250)
     table.pack(fill="both", expand=True, padx=10, pady=10)
 
     # Remembers which Asset each table row shows, so Edit and Delete know which is selected.
