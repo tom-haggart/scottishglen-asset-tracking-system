@@ -1,5 +1,5 @@
 # employees_tab.py
-# The Employees tab: a table of employees (Add, Edit, Delete buttons come next).
+# The Employees tab: a table of employees with Add, Edit and Delete buttons.
 
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -36,7 +36,7 @@ def build_employees_tab(parent):
             messagebox.showinfo("Select an employee", "Click a row in the table first")
             return None
         return employees_by_row[selection[0]]
-    
+
     def add():
         open_employee_dialog(tab.winfo_toplevel(), on_saved=refresh)
 

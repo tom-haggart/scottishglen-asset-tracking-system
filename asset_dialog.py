@@ -12,7 +12,7 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
     hardware = asset.hardware_details if asset else collect_hardware_details()
     # Fetch what can fail (hardware, employees) before opening the window, so a database error leaves no half-built dialog.
     employees = get_employees()
-    
+
     dialog = tk.Toplevel(parent)
     dialog.title("Edit Asset" if asset else "Add Asset")
     dialog.transient(parent)
@@ -48,7 +48,7 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
     ttk.Label(dialog, text="Notes (optional, max 255 characters)").grid(row=7, column=0, sticky="w", padx=10, pady=5)
     notes_entry = ttk.Entry(dialog, width=40)
     notes_entry.grid(row=7, column=1, padx=10, pady=5)
-   
+
     # Shows how many of the 255 allowed characters have been used.
     notes_count = ttk.Label(dialog, text="0 / 255")
     notes_count.grid(row=7, column=2, padx=(0, 10))

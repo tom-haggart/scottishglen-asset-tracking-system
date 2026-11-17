@@ -12,7 +12,7 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
     department_lookup = {}
     for department in get_departments():
         department_lookup[department.department_name] = department.department_id
-    
+
     dialog = tk.Toplevel(parent)
     dialog.title("Edit Employee" if employee else "Add Employee")
     # Keeps the dialog on top of the main window and blocks it until this one is closed.
@@ -43,7 +43,7 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
         last_name_entry.insert(0, employee.last_name)
         email_entry.insert(0, employee.email)
         department_box.set(employee.department.department_name)
-    
+
     def save():
         """Validates the inputs, then adds a new employee or updates the one being edited."""
         first_name = first_name_entry.get().strip()

@@ -17,7 +17,7 @@ create table employee (
     email varchar(100) not null,
     department_id int not null,
     foreign key (department_id) references department(department_id)
-    );
+);
 
 -- Hardware details collected automatically from the machine, not typed in by staff.
 -- Created before asset because asset points to it.

@@ -20,7 +20,7 @@ def get_ip_address():
     except OSError:
         return "Unknown"
 
-# macOS is for development pathway only.
+# macOS is for development only.
 def get_model():
     """Returns the model of this machine, or Unknown if it cannot be read."""
     try:
@@ -41,7 +41,7 @@ def get_manufacturer():
         if platform.system() == "Darwin":
             return "Apple"
         if platform.system() == "Windows":
-            result = subprocess.run(["powershell", "-NoProfile", "-Command", "(Get-CimInstance Win32_ComputerSystem).Manufacturer"],  capture_output=True, text=True, timeout=15)
+            result = subprocess.run(["powershell", "-NoProfile", "-Command", "(Get-CimInstance Win32_ComputerSystem).Manufacturer"], capture_output=True, text=True, timeout=15)
             return result.stdout.strip() or "Unknown"
         return "Unknown"
     except Exception:
@@ -68,7 +68,7 @@ def validate_asset(employee_id, purchase_date_text, notes):
         except ValueError:
             errors.append("Wrong format used. Correct format: YYYY-MM-DD")
     if notes and len(notes) > 255:
-            errors.append("Note is too long. Character limit: 255")
+        errors.append("Note is too long. Character limit: 255")
     return errors
 
 # Limits match the database (schema.sql)
@@ -95,7 +95,7 @@ def validate_employee(first_name, last_name, email, department_id):
     if department_id is None:
         errors.append("Choose a department")
     return errors
-    
+
 # Quick manual test: only runs when this file is run directly. Checks validation.
 if __name__ == "__main__":
     details = collect_hardware_details()

@@ -29,7 +29,7 @@ def open_main_window():
 
     notebook = ttk.Notebook(root)
     notebook.pack(fill="both", expand=True)
-    try:  
+    try:
         notebook.add(build_assets_tab(notebook), text="Assets")
         notebook.add(build_employees_tab(notebook), text="Employees")
     except pyodbc.Error:

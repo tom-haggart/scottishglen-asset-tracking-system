@@ -13,7 +13,7 @@ def build_assets_tab(parent):
     """Builds the Assets tab inside parent and returns it."""
     tab = ttk.Frame(parent)
 
-    columns = ("asset_id", "system_name", "model", "asset_type", "ip_address","employee", "purchase_date", "notes")
+    columns = ("asset_id", "system_name", "model", "asset_type", "ip_address", "employee", "purchase_date", "notes")
     table = ttk.Treeview(tab, columns=columns, show="headings", selectmode="browse")
     table.heading("asset_id", text="ID")
     table.heading("system_name", text="System name")
@@ -66,7 +66,7 @@ def build_assets_tab(parent):
     def go_previous():
         current_page["number"] -= 1
         refresh()
-    
+
     def go_next():
         current_page["number"] += 1
         refresh()
@@ -78,7 +78,7 @@ def build_assets_tab(parent):
             messagebox.showinfo("Select an asset", "Click a row in the table first")
             return None
         return assets_by_row[selection[0]]
-    
+
     def add():
         open_asset_dialog(tab.winfo_toplevel(), on_saved=refresh)
 

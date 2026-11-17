@@ -67,7 +67,7 @@ def update_employee(employee_id, first_name, last_name, email, department_id):
 
 # Deletes an employee, but only if they own no assets.
 def delete_employee(employee_id):
-    """Deletes one employee, returns True if it existed, False if not and 
+    """Deletes one employee, returns True if it existed, False if not and
     raises ValueError if the employee still owns assets."""
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -121,7 +121,7 @@ def get_assets(limit=None, offset=0):
             employee = Employee(row.first_name, row.last_name, row.email, department, row.employee_id)
             assets.append(Asset(row.asset_id, hardware, employee, row.purchase_date, row.notes))
         return assets
-    
+
 def count_assets():
     """Returns how many assets there are, used to work out the number of pages."""
     with get_connection() as conn:
