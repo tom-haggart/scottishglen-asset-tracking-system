@@ -71,7 +71,7 @@ def open_employee_dialog(parent, employee=None, on_saved=None):
 
     # NFR 5: instructions stay visible while the user types.
     instructions = ("All four boxes are required. "
-    "Click Save to keep your changes, or Cancel to leave without saving.")
+                    "Click Save to keep your changes, or Cancel to leave without saving.")
     ttk.Label(dialog, text=instructions, wraplength=350, justify="left").grid(row=5, column=0, columnspan=2, sticky="w", padx=10, pady=(0,10))
 
 # Quick manual test: opens the dialog from a small test window.

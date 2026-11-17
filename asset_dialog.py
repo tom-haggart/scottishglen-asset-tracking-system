@@ -97,7 +97,7 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
 
     # NFR 5: instructions stay visible while the user types.
     instructions = "Choose an employee (required). The date and notes are optional. " \
-    "Click Save to keep your changes, or Cancel to leave without saving."
+                   "Click Save to keep your changes, or Cancel to leave without saving."
     ttk.Label(dialog, text=instructions, wraplength=450, justify="left").grid(row=9, column=0, columnspan=2, sticky="w", padx=10, pady=(0,10))
 
 # Quick manual test: opens the dialog in Add mode and in Edit mode with the first stored asset.
