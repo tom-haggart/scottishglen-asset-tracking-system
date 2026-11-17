@@ -48,6 +48,15 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
     ttk.Label(dialog, text="Notes (optional, max 255 characters)").grid(row=7, column=0, sticky="w", padx=10, pady=5)
     notes_entry = ttk.Entry(dialog, width=40)
     notes_entry.grid(row=7, column=1, padx=10, pady=5)
+   
+    # Shows how many of the 255 allowed characters have been used.
+    notes_count = ttk.Label(dialog, text="0 / 255")
+    notes_count.grid(row=7, column=2, padx=(0, 10))
+
+    def update_count(event=None):
+        notes_count.config(text=f"{len(notes_entry.get())} / 255")
+
+    notes_entry.bind("<KeyRelease>", update_count)
 
     ttk.Button(dialog, text="Cancel", command=dialog.destroy).grid(row=8, column=0, padx=10, pady=10)
 
@@ -58,6 +67,7 @@ def open_asset_dialog(parent, asset=None, on_saved=None):
             date_entry.insert(0, str(asset.purchase_date))
         if asset.notes is not None:
             notes_entry.insert(0, asset.notes)
+            update_count()
 
     def save():
         """Validates the inputs, then adds a new asset or updates the one being edited."""
